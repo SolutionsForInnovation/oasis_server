@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from '../controllers/app.controller';
-import { AppService } from '../services/app.service';
 
 import { RoomsService } from '../services/rooms.service';
 import { GuestsService } from '../services/guests.service';
@@ -30,7 +28,7 @@ import { Reservation } from '../models/reservation.entity';
     GuestsModule,
     ReservationsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, RoomsService, GuestsService, ReservationsService],
+  controllers: [],
+  providers: [RoomsService, GuestsService, ReservationsService],
 })
 export class AppModule {}
