@@ -6,11 +6,14 @@ import {
   Param,
   Put,
   Delete,
+  UseFilters,
 } from '@nestjs/common';
 import { RoomsService } from '../services/rooms.service';
 import { Room } from '../models/room.entity';
+import { HttpExceptionFilter } from '../filters/http-exception.filter';
 
 @Controller('rooms')
+@UseFilters(HttpExceptionFilter)
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 

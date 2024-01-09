@@ -6,11 +6,14 @@ import {
   Param,
   Put,
   Delete,
+  UseFilters,
 } from '@nestjs/common';
 import { ReservationsService } from '../services/reservations.service';
 import { Reservation } from '../models/reservation.entity';
+import { HttpExceptionFilter } from '../filters/http-exception.filter';
 
 @Controller('reservations')
+@UseFilters(HttpExceptionFilter)
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
