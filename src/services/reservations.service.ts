@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Reservation } from '../models/reservation.entity';
@@ -11,29 +11,49 @@ export class ReservationsService {
   ) {}
 
   async findAll(): Promise<Reservation[]> {
-    return this.reservationRepository.find();
+    try {
+      return this.reservationRepository.find();
+    } catch (e) {
+      throw new NotFoundException('Failed to retrieve reservations');
+    }
   }
 
   async findOne(id: number): Promise<Reservation> {
-    return this.reservationRepository.findOne({
-      where: { reservation_id: id },
-    });
+    try {
+      return this.reservationRepository.findOne({
+        where: { reservation_id: id },
+      });
+    } catch (e) {
+      throw new NotFoundException('Failed to retrieve reservation');
+    }
   }
 
   async create(reservationData: Partial<Reservation>): Promise<Reservation> {
-    const newReservation = this.reservationRepository.create(reservationData);
-    return this.reservationRepository.save(newReservation);
+    try {
+      const newReservation = this.reservationRepository.create(reservationData);
+      return this.reservationRepository.save(newReservation);
+    } catch (e) {
+      throw new BadRequestException('Failed to create reservation');
+    }
   }
 
   async update(
     id: number,
     reservationData: Partial<Reservation>,
   ): Promise<Reservation> {
-    await this.reservationRepository.update(id, reservationData);
-    return this.findOne(id);
+    try {
+      await this.reservationRepository.update(id, reservationData);
+      return this.findOne(id);
+    } catch (e) {
+      throw new BadRequestException('Failed to update reservation');
+    }
   }
 
   async remove(id: number): Promise<void> {
-    await this.reservationRepository.delete(id);
+    try {
+      await this.reservationRepository.delete(id);
+    } catch (e) {
+      throw new BadRequestException('Failed to remove reservation');
+    }
   }
 }
