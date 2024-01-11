@@ -60,4 +60,25 @@ export class ReservationsService {
       throw new BadRequestException('Failed to remove reservation');
     }
   }
+
+  async checkInOut(
+    reservationId: number,
+    isCheckedIn: boolean,
+  ): Promise<Reservation> {
+    const reservation = await this.reservationRepository.findOne({
+      where: { reservation_id: reservationId },
+    });
+
+    if (!reservation) {
+      throw new NotFoundException('Reservation not found');
+    }
+
+    if (isCheckedIn) {
+      reservation.check_in_date = new Date();
+    } else {
+      reservation.check_out_date = new Date();
+    }
+
+    return this.reservationRepository.save(reservation);
+  }
 }

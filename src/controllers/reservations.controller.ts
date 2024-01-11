@@ -6,7 +6,7 @@ import {
   Param,
   Put,
   Delete,
-  UseFilters,
+  UseFilters, Patch, BadRequestException,
 } from '@nestjs/common';
 import { ReservationsService } from '../services/reservations.service';
 import { Reservation } from '../models/reservation.entity';
@@ -45,5 +45,17 @@ export class ReservationsController {
   @Delete(':id')
   async remove(@Param('id') id: number): Promise<void> {
     return this.reservationsService.remove(id);
+  }
+
+  @Patch(':id/check-in-out')
+  async checkInOut(
+    @Param('id') id: number,
+    @Body('isCheckedIn') isCheckedIn: boolean,
+  ): Promise<Reservation> {
+    if (isCheckedIn === undefined || typeof isCheckedIn !== 'boolean') {
+      throw new BadRequestException('Invalid check-in/out status');
+    }
+
+    return this.reservationsService.checkInOut(id, isCheckedIn);
   }
 }
